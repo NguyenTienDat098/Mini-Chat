@@ -6,14 +6,12 @@ import Home from "./pages/Home";
 import { useContext } from "react";
 import { ThemeContext } from "./providers/Themes";
 import Notifications from "./components/Notifications";
-import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const ThemeData = useContext(ThemeContext);
   const { theme } = ThemeData;
   return (
     <div className="App relative overflow-hidden" data-theme={theme}>
-      <PageNotFound />
       {/* <Notifications />
       <Router>
         <Routes>
