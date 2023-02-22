@@ -1,0 +1,27 @@
+.carousel {
+  display: flex !important;
+}
+.overlay {
+  animation: overlay 0.75s ease;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+.media-image {
+  display: none;
+  animation: overlay 0.5s ease;
+}
+.media-image.show {
+  display: block;
+}
+
+@keyframes overlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

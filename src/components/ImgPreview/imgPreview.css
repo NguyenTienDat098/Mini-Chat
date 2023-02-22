@@ -1,0 +1,12 @@
+.img-preview {
+  display: none !important;
+}
+.img-preview.show {
+  display: flex !important;
+}
+@media only screen and (max-width: 640px) {
+  .image {
+    width: 100% !important;
+    height: auto !important;
+  }
+}

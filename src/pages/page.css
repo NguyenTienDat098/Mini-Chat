@@ -1,0 +1,85 @@
+/* login , register */
+.login-page {
+  user-select: none;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+}
+.view {
+  width: 960px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 177px 130px 33px 95px;
+  animation: login-animation 1s ease;
+}
+.login-pic {
+  transform: perspective(300px) rotateX(0deg) rotateY(0deg);
+  will-change: transform;
+  width: 356px;
+}
+
+@keyframes login-animation {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .view {
+    width: 90%;
+    padding: 0;
+  }
+  .login-pic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+  }
+  .login-form {
+    padding: 20px 10px;
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .view {
+    width: 90%;
+    padding: 0;
+  }
+  .login-form {
+    width: 100%;
+    padding: 20px;
+  }
+  .to-register {
+    padding-top: 20px !important;
+  }
+  .login-pic {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-pic img {
+    width: 80%;
+  }
+}
+/*  home  */
+.home-page {
+  background-color: var(--background);
+  color: var(#fff);
+}

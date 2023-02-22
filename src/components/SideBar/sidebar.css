@@ -1,0 +1,21 @@
+.sidebar-mobile {
+  width: 100% !important;
+}
+.options {
+  display: none;
+  transition: 0.5s ease;
+  animation: options 0.75s ease;
+}
+.options.show {
+  display: block;
+}
+@keyframes options {
+  from {
+    opacity: 0;
+    transform: translateX(-200%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}

@@ -1,0 +1,17 @@
+.icons {
+  transition: var(--smooth);
+  display: none !important;
+  animation: show 0.75s ease;
+}
+.icons.show {
+  display: grid !important;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

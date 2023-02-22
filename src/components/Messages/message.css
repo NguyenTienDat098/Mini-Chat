@@ -1,0 +1,62 @@
+.message-style {
+  color: var(--text-black);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  padding: 8px 16px;
+  -webkit-transform-origin: 0;
+  transform-origin: 0;
+  transition: all 0.2s ease;
+  word-break: break-word;
+  flex-direction: column;
+  border-radius: 6px 20px 20px 20px;
+  max-width: 400px;
+}
+.my-mes .message-style span {
+  margin: 0;
+  padding: 0;
+}
+.my-mes .infor {
+  flex-direction: row-reverse;
+}
+.my-mes span {
+  text-align: end;
+  margin-right: 40px;
+}
+.message-container {
+  animation: message 0.3s ease;
+}
+.my-mes {
+  animation: my-message 0.3s ease;
+}
+.img-mes {
+  background-color: #fff !important;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  max-height: 220px;
+  max-width: 220px;
+  min-height: 60px;
+  min-width: 60px;
+  object-fit: cover;
+}
+
+@keyframes message {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes my-message {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}

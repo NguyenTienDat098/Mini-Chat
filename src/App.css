@@ -1,0 +1,209 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --main-color: rgba(254, 44, 85, 1);
+  --background: #fff;
+  --text-black: #050505;
+  --light-gray: #3a3b3c;
+  --gray: #e4e6eb;
+  --message-gray: #e4e6eb;
+  --white-light-gray: #fff;
+  --border-radius: 8px;
+  --smooth: all 0.3s ease;
+  --text-color: #000;
+  --error-color: #ee5253;
+  --success-color: #1dd1a1;
+  --border-color: #34495e;
+  --sub-color: #596275;
+  --online: #079992;
+
+  --text-nav: #fff;
+  --background-nav: #242526;
+  --sidebar-setting: rgba(255, 255, 255, 0.2);
+
+  --medium-gray: #bcc0c4; /*not change*/
+  --text-gray: #65676b; /*not change*/
+  --dark-gray: #606770; /*not change*/
+  --active-green: #5ad539; /*not change*/
+  --overlay-green: rgba(90, 213, 57, 0.3); /*not change*/
+
+  --overlay: rgba(218, 218, 218, 0.6);
+  --border-color: #e4e6eb;
+  --box-border-color: transparent;
+  --box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
+  --icon-color: #34495e;
+  --icon-nav: #fff;
+  --placeholder-color: #606770;
+
+  /* Scroll bar */
+  --track-color: #fff;
+  --thumb-color: #aaa;
+  --thumb-hover-color: #888;
+}
+
+[data-theme="dark"] {
+  --background: #242526;
+  --text-black: #000;
+  --light-gray: #d5d5d8;
+  --text-color: #fff;
+  --gray: #767677;
+  --message-gray: #3a3b3c;
+  --white-light-gray: #3a3b3c;
+
+  --text-nav: #000;
+  --background-nav: #fff;
+  --sidebar-setting: rgba(0, 0, 0, 0.2);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+  --border-color: #3a3b3c;
+  --box-border-color: #3a3b3c;
+  --box-shadow: rgb(0, 0, 0, 0.3) 0px 4px 16px;
+
+  /* Scroll bar */
+  --track-color: #242526;
+  --thumb-color: #686868;
+  --thumb-hover-color: #888;
+}
+
+[data-theme="purple"] {
+  --background: #6d214f;
+  --track-color: #6d214f;
+  --thumb-color: #f8efba;
+  --thumb-hover-color: #f8efba;
+  --text-nav: #fff;
+  --border-color: #b33771;
+  --text-color: #f8efba;
+  --text-gray: #f8efba;
+  --light-gray: #fc427b;
+  --message-gray: #fc427b;
+  --text-black: #fff;
+  --icon-color: #000;
+  --online: #fff;
+  --placeholder-color: #fff;
+  --main-color: #ee5253;
+  --icon-nav: #000;
+  --sub-color: #833471;
+}
+
+[data-theme="green"] {
+  --background: #10ac84;
+  --border-color: #58b19f;
+  --track-color: #10ac84;
+  --thumb-color: #197562;
+  --thumb-hover-color: #197562;
+  --text-color: #fff;
+  --text-gray: #fff;
+  --text-nav: #fff;
+  --light-gray: #197562;
+  --message-gray: #26de81;
+  --text-black: #fff;
+  --icon-color: #000;
+  --online: #b8e994;
+  --main-color: #78e08f;
+  --sub-color: #1dd1a1;
+  --placeholder-color: #fff;
+  --icon-nav: #000;
+}
+
+[data-theme="blue"] {
+  --background: #48dbfb;
+  --border-color: #01a3a4;
+  --track-color: #48dbfb;
+  --thumb-color: #2e86de;
+  --thumb-hover-color: #2e86de;
+  --text-color: #fff;
+  --text-nav: #fff;
+  --text-gray: #fff;
+  --light-gray: #54a0ff;
+  --message-gray: #0abde3;
+  --text-black: #fff;
+  --icon-color: #0abde3;
+  --online: #2e86de;
+  --main-color: #2e86de;
+  --sub-color: #54a0ff;
+  --placeholder-color: #fff;
+  --icon-nav: #000;
+  --icon-color: #000;
+}
+.App {
+  transition: var(--smooth);
+}
+
+/* placeholder */
+#inputID::placeholder {
+  color: var(--placeholder-color);
+  opacity: 1;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--track-color);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--thumb-color);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--thumb-hover-color);
+}
+
+body {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 400;
+  background-color: var(--background);
+  color: var(--text-color);
+}
+html {
+  scroll-behavior: smooth;
+}
+input {
+  outline: none !important;
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-size: 15px !important;
+}
+img {
+  object-fit: cover;
+  width: 100%;
+}
+button {
+  outline: none;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--smooth);
+  border: none;
+  color: #fff !important;
+}
+button:hover {
+  color: #fff;
+  opacity: 0.5;
+}
+.firebase-emulator-warning {
+  display: none;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hidden-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hidden-scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.sc-bcXHqe {
+  border-color: var(--sub-color) !important;
+}

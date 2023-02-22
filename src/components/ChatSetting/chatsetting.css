@@ -1,0 +1,63 @@
+.chat-setting {
+  width: 360px;
+  transition: var(--smooth);
+  display: none;
+  animation: chat-setting 0.3s ease;
+  background-color: var(--background-nav);
+  color: var(--text-nav);
+}
+.chat-setting.show {
+  display: block;
+}
+
+@keyframes chat-setting {
+  from {
+    opacity: 0;
+    transform: translateX(200%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+.img-chat {
+  border-radius: 50%;
+  height: 80px;
+  object-fit: cover;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 80px;
+}
+.setting-option {
+  overflow: hidden;
+}
+.list-option-item {
+  transition: var(--smooth);
+  height: 0;
+}
+.list-option-item span {
+  font-size: 14px;
+}
+.list-option-item.show {
+  height: 260px;
+}
+
+.icon {
+  transition: var(--smooth);
+}
+.icon.icon-rotate {
+  transform: rotate(90deg);
+}
+/* responsive */
+.chatsetting-tablet {
+  width: 300px !important;
+}
+.chatsetting-mobile {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+  background-color: var(--background);
+}
