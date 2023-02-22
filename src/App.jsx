@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import { useContext } from "react";
 import { ThemeContext } from "./providers/Themes";
 import Notifications from "./components/Notifications";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const ThemeData = useContext(ThemeContext);
@@ -21,6 +22,7 @@ function App() {
           <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
       </Router> */}
+      <PageNotFound />
     </div>
   );
 }
