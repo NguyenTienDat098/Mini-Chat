@@ -11,7 +11,6 @@ import LoadingPage from "../components/Loading/LoadingPage";
 import "./page.css";
 import logo from "../assets/logo/logo-no-background.svg";
 import SideBar from "../components/SideBar";
-import PageNotFound from "./pagenotfound";
 function Home() {
   const UserData = useContext(UserContext);
   const { user } = UserData;
