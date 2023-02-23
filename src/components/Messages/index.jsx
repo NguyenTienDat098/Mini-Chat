@@ -148,21 +148,11 @@ function Message({ name, photo, message, createdAt, id, file, icon, gif }) {
                 <span className="text-[14px] text-[var(--text-color)]">
                   {message}
                 </span>
-                {gif && gif !== ""
-                  ? GIFS.map((e) => {
-                      if (e.name === gif) {
-                        return (
-                          <img
-                            src={e.gif}
-                            alt="gif"
-                            key={uuid()}
-                            className="w-[100px]"
-                          />
-                        );
-                      }
-                      return false;
-                    })
-                  : false}
+                {gif && gif !== "" ? (
+                  <img src={gif} alt="gif" key={uuid()} className="w-[100px]" />
+                ) : (
+                  false
+                )}
                 {icon && icon !== ""
                   ? ICONS.map((e) => {
                       if (e.name === icon) {

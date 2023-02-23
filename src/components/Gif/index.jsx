@@ -14,11 +14,8 @@ import SlushyIdleCowbird from "../../assets/gifs/SlushyIdleCowbird.gif";
 import SomberAntiqueAmericanbadger from "../../assets/gifs/SomberAntiqueAmericanbadger.gif";
 import TartScarceIslandwhistler from "../../assets/gifs/TartScarceIslandwhistler.gif";
 import { IconsMessageContext } from "../../providers/IconsMessage";
-import Error from "../giphy/Error";
-import TextList from "../giphy/TextList";
-
 import "./gif.css";
-
+import { Grid } from "@giphy/react-components";
 const GIFS = [
   { name: "AmbitiousGiftedBetafish", gif: AmbitiousGiftedBetafish },
   { name: "ColorlessMeagerArcherfish", gif: ColorlessMeagerArcherfish },
@@ -35,73 +32,52 @@ const GIFS = [
   { name: "TartScarceIslandwhistler", gif: TartScarceIslandwhistler },
 ];
 
-const giphy = new GiphyFetch("9oxIV5EL37J5VHQPP2tP3ZKnLUw4deZz");
+const giphyFetch = new GiphyFetch("9oxIV5EL37J5VHQPP2tP3ZKnLUw4deZz");
+const fetchGifs = (offset) => giphyFetch.trending({ offset, limit: 10 });
 
 function Gif({ show }) {
   const gifRef = useRef();
   const IconMessageData = useContext(IconsMessageContext);
   const { setGifMessage } = IconMessageData;
-  const [results, setResults] = useState([]);
-  const [err, setErr] = useState(false);
-
-  const handleFindGif = (text) => {
-    if (text.length === 0) {
-      setErr(true);
-      return;
-    }
-
-    console.log(text);
-    const apiCall = async () => {
-      const res = await giphy.animate(text, { limit: 20 });
-      setResults(res.data);
-    };
-
-    apiCall();
-    setErr(false);
-  };
+  const [modalGif, setModalGif] = useState(null);
 
   useEffect(() => {
-    if (show && gifRef.current) {
+    if (show) {
       gifRef.current.classList.add("show");
     } else {
       gifRef.current.classList.remove("show");
     }
   }, [show]);
+
+  useEffect(() => {
+    if (modalGif !== null) {
+      setGifMessage(modalGif.images.original.url);
+    }
+  }, [modalGif]);
+
   return (
     <div
-      className="grid grid-cols-3 gap-1 bg-white shadow-lg rounded-lg p-2 absolute bottom-[80px] left-[20px] z-20 gif"
+      className="flex flex-col bg-white shadow-lg rounded-lg p-2 absolute bottom-[80px] left-[20px] z-20 gif"
       ref={gifRef}
     >
-      <div>
-        <Error isError={err} text="need length longer than 0 for input" />
-        {results && <TextList gifs={results} />}
+      <div className="overflow-x-hidden max-h-[400px] overflow-y-scroll">
+        <Grid
+          onGifClick={(gif, e) => {
+            console.log("gif", gif);
+            e.preventDefault();
+            setModalGif(gif);
+          }}
+          fetchGifs={fetchGifs}
+          width={300}
+          columns={3}
+          gutter={6}
+        />
       </div>
       <div>
-        <input
-          type="text"
-          onChange={(e) => {
-            handleFindGif(e.target.value);
-          }}
-        />
+        {/* <input placeholder="Tìm kiếm gif..." type="text" onChange={(e) => {}} /> */}
       </div>
     </div>
   );
 }
 
 export default Gif;
-//
-{
-  /* {GIFS.map((e) => {
-        return (
-          <img
-            onClick={() => {
-              setGifMessage(e.name);
-            }}
-            src={e.gif}
-            alt="gif"
-            key={e.name}
-            className="p-2 rounded-lg w-[80px] m-2 cursor-pointer hover:text-[var(--sub-color)] hover:scale-[1.4] transition-all duration-150 ease-linear"
-          />
-        );
-      })} */
-}

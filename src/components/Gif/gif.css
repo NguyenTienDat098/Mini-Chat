@@ -4,7 +4,7 @@
   animation: show 0.75s ease;
 }
 .gif.show {
-  display: grid !important;
+  display: flex !important;
 }
 
 @keyframes show {

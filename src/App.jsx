@@ -13,7 +13,7 @@ function App() {
   const { theme } = ThemeData;
   return (
     <div className="App relative overflow-hidden" data-theme={theme}>
-      {/* <Notifications />
+      <Notifications />
       <Router>
         <Routes>
           <Route path="/login" element={<Login />}></Route>
@@ -21,8 +21,8 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
-      </Router> */}
-      <PageNotFound />
+      </Router>
+      {/* <PageNotFound /> */}
     </div>
   );
 }
