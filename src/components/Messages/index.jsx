@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import { ImagePreviewContext } from "../../providers/ImagePreview";
-import { UserContext } from "../../providers/Users";
+import { MobileContext } from "../../providers/Mobile";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 import "./message.css";
 import {
   faFaceGrinSquintTears,
@@ -36,7 +37,6 @@ import uuid from "react-uuid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { MobileContext } from "../../providers/Mobile";
 
 const GIFS = [
   { name: "AmbitiousGiftedBetafish", gif: AmbitiousGiftedBetafish },
@@ -111,14 +111,15 @@ const ICONS = [
     icon: faPoo,
   },
 ];
-function Message({ name, photo, message, createdAt, id, file, icon, gif }) {
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
+function Message(props) {
+  const { name, photo, message, createdAt, id, file, icon, gif } = props;
   const ImagePreviewData = useContext(ImagePreviewContext);
   const { setImagePreview } = ImagePreviewData;
   const MobileData = useContext(MobileContext);
   const { isMobile } = MobileData;
-  if (user !== null && user.id === id) {
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser } = CurrentAuthData;
+  if (currentUser !== null && currentUser.id === id) {
     return (
       <>
         <div className="p-1 flex flex-col justify-center text-white my-mes">

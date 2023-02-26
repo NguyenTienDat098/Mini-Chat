@@ -5,15 +5,14 @@ import { storage } from "../../firebase/config";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
   getMutipleDocuments,
-  listenDocument,
   updateArrayField,
   updateField,
 } from "../../firebase/util";
-import { UserContext } from "../../providers/Users";
 import moment from "moment";
 import uuid from "react-uuid";
 import FileUploader from "../FileUploader";
 import { NotificationsContext } from "../../providers/Notifications";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 
 const fileTypes = ["JPG", "PNG", "GIF"];
 
@@ -22,34 +21,12 @@ function FileUploaded({ className = "" }) {
   const UploadData = useContext(UploadContext);
   const { showUpload, setShowUpload, caseUpload } = UploadData;
   const uploadRef = useRef();
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
   const [process, setProcess] = useState(0);
-  const [currentChat, setCurrentChat] = useState(null);
   const NotificationsData = useContext(NotificationsContext);
   const { setNotifications } = NotificationsData;
   const overlayRef = useRef();
-
-  useEffect(() => {
-    if (currentUser !== null && currentUser.currentChat !== "") {
-      listenDocument("Users", currentUser.currentChat, (data) => {
-        if (data !== undefined) {
-          setCurrentChat(data);
-        }
-      });
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser, currentUserChat } = CurrentAuthData;
 
   useEffect(() => {
     if (showUpload) {
@@ -87,7 +64,7 @@ function FileUploaded({ className = "" }) {
   };
 
   const updateAvatar = (newAvatar) => {
-    if (currentUser !== null && currentChat !== null) {
+    if (currentUser !== null && currentUserChat !== null) {
       getMutipleDocuments("Users", "username", ">=", "").then((users) => {
         users.forEach((user) => {
           let dataUpdate = user;
@@ -123,10 +100,10 @@ function FileUploaded({ className = "" }) {
 
           switch (snapshot.state) {
             case "paused":
-              // console.log("Upload is paused");
+              //
               break;
             case "running":
-              // console.log("Upload is running");
+              //
               break;
           }
         },

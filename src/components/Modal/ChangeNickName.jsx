@@ -1,13 +1,9 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  getSimpleDocument,
-  listenDocument,
-  updateField,
-} from "../../firebase/util";
+import { getSimpleDocument, updateField } from "../../firebase/util";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 import { ModalContext } from "../../providers/Modal";
-import { UserContext } from "../../providers/Users";
 import "./modal.css";
 function ChangeNickName({ show, className }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -15,34 +11,16 @@ function ChangeNickName({ show, className }) {
   const { setShowModal } = ModalData;
   const modalRef = useRef();
   const overlayRef = useRef();
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
-  const [nickName, setNickName] = useState("");
-  const [currentChat, setCurrentChat] = useState(null);
-
-  useEffect(() => {
-    if (
-      currentUser !== null &&
-      currentUser.chats.length > 0 &&
-      currentChat !== null
-    ) {
-      currentUser.chats.map((e) => {
-        if (e.id === currentChat.id && e.nickName !== "") {
-          setNickName(e.nickName);
-        } else {
-          setNickName(currentChat.username);
-        }
-      });
-    }
-  }, [currentUser, currentChat]);
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser, currentUserChat } = CurrentAuthData;
+  const [nickName, setNickName] = useState(null);
 
   const changeNickName = () => {
     if (currentUser !== null) {
       getSimpleDocument("Users", currentUser.id).then((res) => {
         let dataUpdate = res;
         dataUpdate.chats.forEach((user) => {
-          if (user.id === currentChat.id) {
+          if (user.id === currentUserChat.id) {
             user.nickName = nickName;
           }
         });
@@ -55,26 +33,6 @@ function ChangeNickName({ show, className }) {
       });
     }
   };
-
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (currentUser !== null && currentUser.currentChat !== "") {
-      listenDocument("Users", currentUser.currentChat, (data) => {
-        if (data !== undefined) {
-          setCurrentChat(data);
-        }
-      });
-    }
-  }, [currentUser]);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -133,7 +91,9 @@ function ChangeNickName({ show, className }) {
               <span className={`nick-name-title ${isFocused ? "focus" : ""}`}>
                 Biệt danh
               </span>
-              <span>{nickName !== "" ? nickName.length : 0}/100</span>
+              <span>
+                {nickName !== "" && nickName !== null ? nickName.length : 0}/100
+              </span>
             </div>
             <input
               onFocus={handleFocus}

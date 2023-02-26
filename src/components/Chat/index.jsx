@@ -9,7 +9,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import "./chat.css";
 import { listenDocument, updateArrayField } from "../../firebase/util";
 import moment from "moment/moment";
-import { UserContext } from "../../providers/Users";
 import CurrentChat from "../CurrentChat";
 import Message from "../Messages";
 import { UploadContext } from "../../providers/UploadFile";
@@ -27,18 +26,17 @@ import { NotificationsContext } from "../../providers/Notifications";
 import sendMessageSound from "../../assets/sounds/send-message.mp3";
 import recivedMessageSound from "../../assets/sounds/recived-message.mp3";
 import EditDiscription from "../Modal/EditDescription";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 
 function Chat({ className = "" }) {
   const audioRef = useRef();
   const [message, setMessage] = useState("");
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser, currentUserChat, nickName } = CurrentAuthData;
   const ModalData = useContext(ModalContext);
   const { showModal } = ModalData;
   const [chat, setChat] = useState(null);
   const [myChat, setMyChat] = useState([]);
-  const [userChat, setUserChat] = useState([]);
   const inputMessageRef = useRef();
   const boardChatRef = useRef();
   const menuMessageRef = useRef();
@@ -50,8 +48,6 @@ function Chat({ className = "" }) {
   const IconMessageData = useContext(IconsMessageContext);
   const { iconMessage, setIconMessage, gifMessage, setGifMessage } =
     IconMessageData;
-  const [nickName, setNickName] = useState(null);
-  const [currentChat, setCurrentChat] = useState(null);
   const MobileData = useContext(MobileContext);
   const { isMobile } = MobileData;
   const ShowChatData = useContext(ShowChatContext);
@@ -61,6 +57,39 @@ function Chat({ className = "" }) {
   const { setNotifications } = NotificationsData;
   const [amountMessage, setAmountMessage] = useState(null);
   const typeMessageRef = useRef();
+  const [userChat, setUserChat] = useState(null);
+
+  const handleShowMenuMessage = () => {
+    if (menuMessageRef && menuItemRef) {
+      menuItemRef.current.classList.toggle("hidden-menu");
+    }
+  };
+
+  const handleSendMessage = (message) => {
+    if (currentUser !== null && message !== "") {
+      const data = {
+        author: {
+          id: currentUser.id,
+          username: currentUser.username,
+          photo: currentUser.photo,
+        },
+        text: message,
+        key: uuid(),
+        createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
+      };
+      updateArrayField("UserChat", currentUser.currentChat, "users", data);
+      audioRef.current.src = sendMessageSound;
+      audioRef.current.play();
+      setMessage("");
+      inputMessageRef.current.focus();
+    } else {
+      setNotifications({
+        type: "error",
+        title: "Lỗi",
+        message: "Không thể gửi tin nhắn, vui lòng thử lại sau",
+      });
+    }
+  };
 
   useEffect(() => {
     if (myChat !== null) {
@@ -72,7 +101,8 @@ function Chat({ className = "" }) {
     if (
       myChat !== null &&
       amountMessage !== null &&
-      myChat.length > amountMessage
+      myChat.length > amountMessage &&
+      audioRef.current
     ) {
       audioRef.current.src = recivedMessageSound;
       audioRef.current.play();
@@ -91,48 +121,8 @@ function Chat({ className = "" }) {
   }, [showChat]);
 
   useEffect(() => {
-    if (currentUser !== null && currentUser.currentChat !== "") {
-      listenDocument("Users", currentUser.currentChat, (data) => {
-        if (data !== undefined) {
-          setCurrentChat(data);
-        }
-      });
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (currentUser !== null && currentChat !== null) {
-      listenDocument("Users", currentUser.id, (data) => {
-        if (data !== undefined) {
-          data.chats.forEach((e) => {
-            if (e.id === currentChat.id) {
-              setNickName(e.nickName);
-            }
-          });
-        }
-      });
-    }
-  }, [currentUser, currentChat]);
-
-  const handleShowMenuMessage = () => {
-    if (menuMessageRef && menuItemRef) {
-      menuItemRef.current.classList.toggle("hidden-menu");
-    }
-  };
-
-  useEffect(() => {
     boardChatRef.current.scrollTop = boardChatRef.current.scrollHeight;
-  }, [userChat, myChat]);
-
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
+  }, [myChat]);
 
   useEffect(() => {
     if (currentUser !== null && currentUser.currentChat !== "") {
@@ -172,41 +162,16 @@ function Chat({ className = "" }) {
   useEffect(() => {
     const handlePressEnter = (e) => {
       if (e.keyCode === 13) {
-        handleSendMessage();
+        e.preventDefault();
+        handleSendMessage(message);
       }
     };
-    window.addEventListener("keydown", handlePressEnter);
+    window.addEventListener("keypress", handlePressEnter);
 
     return () => {
-      window.removeEventListener("keydown", handlePressEnter);
+      window.removeEventListener("keypress", handlePressEnter);
     };
-  });
-
-  const handleSendMessage = () => {
-    if (currentUser !== null && message !== "" && audioRef.current) {
-      const data = {
-        author: {
-          id: currentUser.id,
-          username: currentUser.username,
-          photo: currentUser.photo,
-        },
-        text: message,
-        key: uuid(),
-        createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
-      };
-      updateArrayField("UserChat", currentUser.currentChat, "users", data);
-      audioRef.current.src = sendMessageSound;
-      audioRef.current.play();
-      setMessage("");
-      inputMessageRef.current.focus();
-    } else {
-      setNotifications({
-        type: "error",
-        title: "Lỗi",
-        message: "Không thể gửi tin nhắn, vui lòng thử lại sau",
-      });
-    }
-  };
+  }, [message]);
 
   useEffect(() => {
     if (iconMessage !== null && iconMessage !== "" && currentUser !== null) {
@@ -269,15 +234,15 @@ function Chat({ className = "" }) {
             {chat !== null &&
             chat.length > 0 &&
             currentUser.currentChat !== "" &&
-            currentChat !== null
+            currentUserChat !== null
               ? chat.map((e) => {
-                  if (e.author.id === currentChat.id) {
+                  if (e.author.id === currentUserChat.id) {
                     return (
                       <Message
                         key={e.key}
                         message={e.text}
                         file={e.file}
-                        photo={currentChat.photo}
+                        photo={currentUserChat.photo}
                         name={
                           nickName !== null && nickName !== ""
                             ? nickName

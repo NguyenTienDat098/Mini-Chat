@@ -19,6 +19,7 @@ import Slick from "../Slick";
 import { ThemeContext } from "../../providers/Themes";
 import { ChatSettingContext } from "../../providers/ChatSetting";
 import { ImagePreviewContext } from "../../providers/ImagePreview";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 
 const THEMES = [
   {
@@ -49,10 +50,6 @@ function ChatSetting({ show, className }) {
   const ModalData = useContext(ModalContext);
   const { setShowModal } = ModalData;
   const chatSettingRef = useRef();
-  const [userChat, setUserChat] = useState(null);
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
   const [showSlick, setShowSlick] = useState(false);
   const ThemeData = useContext(ThemeContext);
   const { setTheme } = ThemeData;
@@ -60,25 +57,8 @@ function ChatSetting({ show, className }) {
   const { setShowChatSetting } = ChatSettingData;
   const ImagePreviewData = useContext(ImagePreviewContext);
   const { setImagePreview } = ImagePreviewData;
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (currentUser && currentUser.currentChat !== "") {
-      listenDocument("Users", currentUser.currentChat, (data) => {
-        if (data !== undefined) {
-          setUserChat(data);
-        }
-      });
-    }
-  }, [currentUser]);
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUserChat, nickName } = CurrentAuthData;
 
   useEffect(() => {
     if (show) {
@@ -115,24 +95,18 @@ function ChatSetting({ show, className }) {
         </div>
         <div className="flex-col flex items-center justify-center">
           <img
-            src={userChat !== null ? userChat.photo : defaultAva}
+            src={currentUserChat !== null ? currentUserChat.photo : defaultAva}
             alt="chat"
             className="img-chat cursor-pointer"
             onClick={() => {
-              setImagePreview(userChat.photo);
+              setImagePreview(currentUserChat.photo);
             }}
           />
-          {userChat !== null && currentUser !== null ? (
+          {currentUserChat !== null ? (
             <span className="text-sm mt-2 font-[600]">
-              {currentUser.chats && currentUser.chats.length > 0
-                ? currentUser.chats.find(
-                    (e) => e.id === userChat.id && e.nickName !== ""
-                  )
-                  ? currentUser.chats.find(
-                      (e) => e.id === userChat.id && e.nickName !== ""
-                    ).nickName
-                  : userChat.username
-                : userChat.username}
+              {nickName !== null && nickName !== ""
+                ? nickName
+                : currentUserChat.username}
             </span>
           ) : (
             <span className="text-sm mt-2 font-[600]">Unknown User</span>

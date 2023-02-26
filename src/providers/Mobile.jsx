@@ -23,7 +23,7 @@ function Mobile({ children }) {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("DOMContentLoaded", handleResize);
+      window.removeEventListener("DOMContentLoaded", handleResize());
     };
   }, []);
 

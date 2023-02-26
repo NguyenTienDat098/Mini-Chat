@@ -60,10 +60,9 @@ function Gif({ show }) {
       className="flex flex-col bg-white shadow-lg rounded-lg p-2 absolute bottom-[80px] left-[20px] z-20 gif"
       ref={gifRef}
     >
-      <div className="overflow-x-hidden max-h-[400px] overflow-y-scroll">
+      <div className="overflow-x-hidden max-h-[400px] overflow-y-scroll hidden-scroll">
         <Grid
           onGifClick={(gif, e) => {
-            console.log("gif", gif);
             e.preventDefault();
             setModalGif(gif);
           }}

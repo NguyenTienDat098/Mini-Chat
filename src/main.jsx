@@ -12,27 +12,32 @@ import Themes from "./providers/Themes";
 import Mobile from "./providers/Mobile";
 import ShowChat from "./providers/ShowChat";
 import Notifications from "./providers/Notifications";
+import CurrentAuth from "./providers/CurrentAuth";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
+  // <React.StrictMode>
   <Notifications>
     <Users>
-      <Mobile>
-        <ShowChat>
-          <Themes>
-            <UploadFile>
-              <ImagePrivew>
-                <IconsMessage>
-                  <ChatSetting>
-                    <Modal>
-                      <App />
-                    </Modal>
-                  </ChatSetting>
-                </IconsMessage>
-              </ImagePrivew>
-            </UploadFile>
-          </Themes>
-        </ShowChat>
-      </Mobile>
+      <CurrentAuth>
+        <Mobile>
+          <ShowChat>
+            <Themes>
+              <UploadFile>
+                <ImagePrivew>
+                  <IconsMessage>
+                    <ChatSetting>
+                      <Modal>
+                        <App />
+                      </Modal>
+                    </ChatSetting>
+                  </IconsMessage>
+                </ImagePrivew>
+              </UploadFile>
+            </Themes>
+          </ShowChat>
+        </Mobile>
+      </CurrentAuth>
     </Users>
   </Notifications>
+  // </React.StrictMode>
 );

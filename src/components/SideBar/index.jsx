@@ -3,7 +3,6 @@ import {
   faMagnifyingGlass,
   faPenToSquare,
   faRightFromBracket,
-  faSignature,
   faUserTie,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +11,6 @@ import { useContext, useEffect, useState, useRef } from "react";
 import { ShowChatContext } from "../../providers/ShowChat";
 import {
   getMutipleDocuments,
-  getSimpleDocument,
   listenDocument,
   updateArrayField,
   updateField,
@@ -23,12 +21,12 @@ import Slider from "react-slick";
 import "./sidebar.css";
 import { UploadContext } from "../../providers/UploadFile";
 import { ModalContext } from "../../providers/Modal";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 function SideBar({ className = "" }) {
   const [animationParent] = useAutoAnimate();
   const [userFound, setUserFound] = useState(null);
   const UserData = useContext(UserContext);
-  const { user, logout } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
+  const { logout } = UserData;
   const ShowChatData = useContext(ShowChatContext);
   const { setShowChat } = ShowChatData;
   const [onlineUsers, setOnlineUser] = useState(null);
@@ -39,27 +37,19 @@ function SideBar({ className = "" }) {
   const { setCaseUpload, setShowUpload } = UploadData;
   const ModalData = useContext(ModalContext);
   const { setShowModal } = ModalData;
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser } = CurrentAuthData;
 
-  useEffect(() => {
-    if (showSettingUser) {
-      optionsSettingRef.current.classList.add("show");
-    } else {
-      optionsSettingRef.current.classList.remove("show");
-    }
-  }, [showSettingUser]);
-
+  // chats
   useEffect(() => {
     if (currentUser !== null) {
-      getSimpleDocument("Users", currentUser.id)
-        .then((user) => {
-          setChats(user.chats);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      listenDocument("Users", currentUser.id, (data) => {
+        setChats(currentUser.chats);
+      });
     }
   }, [currentUser]);
 
+  // online
   useEffect(() => {
     if (currentUser !== null) {
       getMutipleDocuments("Users", "online", "==", true).then((users) => {
@@ -68,18 +58,16 @@ function SideBar({ className = "" }) {
     }
   }, [currentUser]);
 
+  // setting
   useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
+    if (showSettingUser) {
+      optionsSettingRef.current.classList.add("show");
+    } else {
+      optionsSettingRef.current.classList.remove("show");
     }
-  }, [user]);
+  }, [showSettingUser]);
 
-  const handleSetChat = (users) => {
-    updateCurrentChat(users.id);
+  const handleSetChat = (currentUser, users) => {
     if (currentUser.chats.length > 0) {
       let exists = false;
       currentUser.chats.forEach((user) => {
@@ -87,6 +75,7 @@ function SideBar({ className = "" }) {
           exists = true;
         }
       });
+      console.log(exists);
       if (!exists) {
         updateArrayField("Users", currentUser.id, "chats", {
           id: users.id,
@@ -104,6 +93,11 @@ function SideBar({ className = "" }) {
           online: currentUser.online,
           desc: currentUser.desc,
         });
+        updateField("Users", currentUser.id, "currentChat", users.id);
+        setShowChat(true);
+      } else {
+        updateField("Users", currentUser.id, "currentChat", users.id);
+        setShowChat(true);
       }
     } else {
       updateArrayField("Users", currentUser.id, "chats", {
@@ -122,12 +116,9 @@ function SideBar({ className = "" }) {
         online: currentUser.online,
         desc: users.desc,
       });
+      updateField("Users", currentUser.id, "currentChat", users.id);
+      setShowChat(true);
     }
-  };
-
-  const updateCurrentChat = (userId) => {
-    updateField("Users", currentUser.id, "currentChat", userId);
-    setShowChat(true);
   };
 
   const handleFindUsers = (valueFind) => {
@@ -135,7 +126,7 @@ function SideBar({ className = "" }) {
     getMutipleDocuments("Users", "username", "<=", valueFind)
       .then((users) => {
         users.forEach((userItem) => {
-          if (userItem.id !== user.id) {
+          if (userItem.id !== currentUser.id) {
             results.push(userItem);
           }
         });
@@ -204,7 +195,7 @@ function SideBar({ className = "" }) {
                 return (
                   <li
                     onClick={() => {
-                      handleSetChat(userItem);
+                      handleSetChat(currentUser, userItem);
                     }}
                     key={userItem.id}
                     className="mb-2 flex items-center select-none cursor-pointer bg-[var(--sidebar-setting)] p-1 rounded-lg"
@@ -240,7 +231,7 @@ function SideBar({ className = "" }) {
                         className="cursor-pointer ml-2 relative user-online-item"
                         key={userItem.id}
                         onClick={() => {
-                          handleSetChat(userItem);
+                          handleSetChat(currentUser, userItem);
                         }}
                       >
                         <img
@@ -264,11 +255,11 @@ function SideBar({ className = "" }) {
         >
           {chats !== null && chats.length > 0
             ? chats.map((userItem) => {
-                if (userItem.id !== user.id) {
+                if (userItem.id !== currentUser.id) {
                   return (
                     <li
                       onClick={() => {
-                        updateCurrentChat(userItem.id);
+                        handleSetChat(currentUser, userItem);
                       }}
                       key={userItem.id}
                       className="hover:bg-[var(--sidebar-setting)] text-[var(--text-nav)] relative cursor-pointer w-full flex items-center rounded-lg p-2"
@@ -367,5 +358,10 @@ function SideBar({ className = "" }) {
     </div>
   );
 }
+const Loading = () => {
+  return <></>;
+};
+
+SideBar.Loading = Loading;
 
 export default SideBar;

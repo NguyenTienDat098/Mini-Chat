@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Chat from "../components/Chat";
 import ChatSetting from "../components/ChatSetting";
 import FileUploaded from "../components/FileUploaded";
-import Search from "../components/Search";
 import { ChatSettingContext } from "../providers/ChatSetting";
 import { MobileContext } from "../providers/Mobile";
 import { UserContext } from "../providers/Users";
@@ -46,7 +45,7 @@ function Home() {
             <LoadingPage color={"rgba(254, 44, 85, 1)"} type={"bubbles"} />
           </div>
           <div className="w-full h-screen flex home-page relative">
-            <Search.Loading
+            <SideBar.Loading
               className={`w-[400px] ${isMobile ? "search-mobile" : ""} ${
                 isTablet ? "search-tablet" : ""
               }`}

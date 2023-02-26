@@ -1,37 +1,20 @@
 import { faArrowLeft, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect, useState } from "react";
-import { listenDocument } from "../../firebase/util";
+import { useContext } from "react";
 import { ChatSettingContext } from "../../providers/ChatSetting";
 import { ShowChatContext } from "../../providers/ShowChat";
-import { UserContext } from "../../providers/Users";
 import LoadingSkeleton from "../Loading/LoadingSkeleton";
 import { formatDistance } from "date-fns";
+import defautlAvatar from "../../assets/imgs/default-avatar.png";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 
 function CurrentChat() {
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
   const ChatSettingData = useContext(ChatSettingContext);
   const { setShowChatSetting } = ChatSettingData;
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userChat, setUserChat] = useState(null);
-  const [nickName, setNickName] = useState(null);
   const ShowChatData = useContext(ShowChatContext);
   const { setShowChat } = ShowChatData;
-
-  useEffect(() => {
-    if (currentUser !== null && userChat !== null) {
-      listenDocument("Users", currentUser.id, (data) => {
-        if (data !== undefined) {
-          data.chats.forEach((e) => {
-            if (e.id === userChat.id) {
-              setNickName(e.nickName);
-            }
-          });
-        }
-      });
-    }
-  }, [currentUser, userChat]);
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUserChat, nickName } = CurrentAuthData;
 
   const getTimeOffline = (endtime) => {
     const now = new Date();
@@ -57,27 +40,7 @@ function CurrentChat() {
     }
   };
 
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (currentUser !== null && currentUser.currentChat !== "") {
-      listenDocument("Users", currentUser.currentChat, (data) => {
-        if (data !== undefined) {
-          setUserChat(data);
-        }
-      });
-    }
-  }, [currentUser]);
-
-  if (userChat !== null) {
+  if (currentUserChat !== null) {
     return (
       <div className="absolute top-[0] left-[0] w-full p-2 flex items-center border-b border-[var(--border-color)] z-20 bg-[var(--background)] text-[var(--text-color)]">
         <div
@@ -89,23 +52,27 @@ function CurrentChat() {
           <FontAwesomeIcon icon={faArrowLeft} />
         </div>
         <img
-          src={userChat.photo}
+          src={currentUserChat !== null ? currentUserChat.photo : defautlAvatar}
           alt="avatar"
           className="w-[30px] h-[30px] rounded-full"
         />
         <div className="flex  flex-col justify-center">
-          <span className="ml-4 font-[600] text-[var(--background-nav)]">
-            {nickName !== null && nickName !== ""
-              ? nickName
-              : userChat.username}
-          </span>
-          {userChat.online ? (
+          {currentUserChat !== null ? (
+            <span className="ml-4 font-[600] text-[var(--background-nav)]">
+              {nickName !== null ? nickName : currentUserChat.username}
+            </span>
+          ) : (
+            false
+          )}
+          {currentUserChat !== null && currentUserChat.online ? (
             <span className="ml-4 text-[14px] text-[var(--online)]">
               online
             </span>
           ) : (
             <span className="ml-4 text-[13px] font-[500] text-gray-400">
-              {getTimeOffline(userChat.endTime)}
+              {getTimeOffline(
+                currentUserChat !== null ? currentUserChat.endTime : ""
+              )}
             </span>
           )}
         </div>

@@ -14,12 +14,14 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { addDocument, getSimpleDocument, updateField } from "../firebase/util";
 import defaultAvatar from "../assets/imgs/default-avatar.png";
 import { serverTimestamp } from "firebase/firestore";
 import { NotificationsContext } from "./Notifications";
+
 export const UserContext = createContext();
 
 function Users({ children }) {
@@ -111,6 +113,76 @@ function Users({ children }) {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [user]);
+
+  const loginWithFaceBook = () => {
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+        const details = getAdditionalUserInfo(result);
+        if (details.isNewUser) {
+          const data = {
+            username: user.displayName,
+            id: user.uid,
+            email: user.email,
+            photo: user.photoURL,
+            emailVerified: user.emailVerified,
+            online: true,
+            currentChat: "",
+            chats: [],
+            startTime: serverTimestamp(),
+            endTime: "",
+            desc: "",
+          };
+          setUser(data);
+          addDocument("Users", user.uid, data);
+          addDocument("UserChat", user.uid, {
+            users: [],
+          });
+        } else {
+          updateField("Users", user.uid, "online", true);
+          updateField("Users", user.uid, "startTime", serverTimestamp());
+          getSimpleDocument("Users", user.uid)
+            .then((user) => {
+              const data = {
+                username: user.username,
+                id: user.id,
+                email: user.email,
+                photo: user.photo,
+                emailVerified: user.emailVerified,
+                online: user.online,
+                currentChat: user.currentChat,
+                chats: user.chats,
+                startTime: serverTimestamp(),
+                endTime: user.endTime,
+                desc: user.desc,
+              };
+              setUser(data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        // const credential = FacebookAuthProvider.credentialFromResult(result);
+        // const accessToken = credential.accessToken;
+        // console.log(user);
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        // const email = error.customData.email;
+        // The AuthCredential type that was used.
+        // const credential = FacebookAuthProvider.credentialFromError(error);
+        Console.log(errorCode + ":" + errorMessage);
+        // ...
+      });
+  };
 
   const register = (email, password, username) => {
     if (email !== null && password !== null && username !== null) {
@@ -327,6 +399,7 @@ function Users({ children }) {
         setUser(null);
         updateField("Users", user.id, "online", false);
         updateField("Users", user.id, "endTime", serverTimestamp());
+        updateField("Users", user.id, "currentChat", "");
       })
       .catch((error) => {
         console.log(error);
@@ -340,6 +413,7 @@ function Users({ children }) {
       register,
       login,
       signInWithGoogle,
+      loginWithFaceBook,
       logout,
     }),
     [user]

@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   getMutipleDocuments,
-  getSimpleDocument,
   listenDocument,
   updateField,
 } from "../../firebase/util";
+import { CurrentAuthContext } from "../../providers/CurrentAuth";
 import { ModalContext } from "../../providers/Modal";
-import { UserContext } from "../../providers/Users";
 import "./modal.css";
 function EditDiscription({ show, className }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -16,10 +15,9 @@ function EditDiscription({ show, className }) {
   const { setShowModal } = ModalData;
   const modalRef = useRef();
   const overlayRef = useRef();
-  const UserData = useContext(UserContext);
-  const { user } = UserData;
-  const [currentUser, setCurrentUser] = useState(null);
   const [description, setDescription] = useState("");
+  const CurrentAuthData = useContext(CurrentAuthContext);
+  const { currentUser } = CurrentAuthData;
 
   useEffect(() => {
     if (currentUser !== null) {
@@ -48,16 +46,6 @@ function EditDiscription({ show, className }) {
       });
     }
   };
-
-  useEffect(() => {
-    if (user !== null) {
-      listenDocument("Users", user.id, (data) => {
-        if (data !== undefined) {
-          setCurrentUser(data);
-        }
-      });
-    }
-  }, [user]);
 
   const handleFocus = () => {
     setIsFocused(true);

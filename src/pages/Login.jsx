@@ -1,4 +1,4 @@
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
   faEnvelope,
@@ -14,7 +14,7 @@ function Login() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const UserData = useContext(UserContext);
-  const { login, user, signInWithGoogle } = UserData;
+  const { login, user, signInWithGoogle, loginWithFaceBook } = UserData;
   const navigate = useNavigate();
   useEffect(() => {
     if (user !== null) {
@@ -68,6 +68,14 @@ function Login() {
             <Link to="#"> Username / Password ?</Link>
           </div>
           <div className="to-register text-[13px] text-center flex items-center justify-center pt-[136px]">
+            <div
+              className="mr-2 cursor-pointer rounded-full bg-[#0984e3] flex items-center justify-center text-white"
+              onClick={() => {
+                loginWithFaceBook();
+              }}
+            >
+              <FontAwesomeIcon icon={faFacebook} className="text-[16px] p-2" />
+            </div>
             <div
               className="mr-2 cursor-pointer rounded-full bg-[var(--main-color)] flex items-center justify-center text-white"
               onClick={() => {
