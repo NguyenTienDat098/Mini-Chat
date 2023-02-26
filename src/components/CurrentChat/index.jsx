@@ -69,9 +69,7 @@ function CurrentChat() {
             </span>
           ) : (
             <span className="ml-4 text-[13px] font-[500] text-gray-400">
-              {currentUserChat.endTime !== ""
-                ? getTimeOffline(currentUserChat.endTime)
-                : false}
+              offline
             </span>
           )}
         </div>
