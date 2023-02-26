@@ -22,7 +22,6 @@ function CurrentChat() {
       const end = endtime.toDate();
       const timeInEnglish = formatDistance(now, end, { addSuffix: true });
       const timeInVietnamese = timeInEnglish
-
         .replace(/(in)/, "Hoạt động")
         .replace(/(ago)/, "trước")
         .replace(/(minutes)/, "phút trước")
@@ -52,27 +51,25 @@ function CurrentChat() {
           <FontAwesomeIcon icon={faArrowLeft} />
         </div>
         <img
-          src={currentUserChat !== null ? currentUserChat.photo : defautlAvatar}
+          src={
+            currentUserChat.photo !== null
+              ? currentUserChat.photo
+              : defautlAvatar
+          }
           alt="avatar"
           className="w-[30px] h-[30px] rounded-full"
         />
         <div className="flex  flex-col justify-center">
-          {currentUserChat !== null ? (
-            <span className="ml-4 font-[600] text-[var(--background-nav)]">
-              {nickName !== null ? nickName : currentUserChat.username}
-            </span>
-          ) : (
-            false
-          )}
-          {currentUserChat !== null && currentUserChat.online ? (
+          <span className="ml-4 font-[600] text-[var(--background-nav)]">
+            {nickName !== null ? nickName : currentUserChat.username}
+          </span>
+          {currentUserChat.online ? (
             <span className="ml-4 text-[14px] text-[var(--online)]">
               online
             </span>
           ) : (
             <span className="ml-4 text-[13px] font-[500] text-gray-400">
-              {getTimeOffline(
-                currentUserChat !== null ? currentUserChat.endTime : ""
-              )}
+              {getTimeOffline(currentUserChat.endTime)}
             </span>
           )}
         </div>

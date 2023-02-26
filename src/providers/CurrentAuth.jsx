@@ -55,12 +55,6 @@ function CurrentAuth({ children }) {
     }
   }, [currentUser]);
 
-  useEffect(() => {
-    if (currentUserChat !== null) {
-      console.log("current user chat: " + currentUserChat.username);
-    }
-  }, [currentUserChat]);
-
   const value = useMemo(
     () => ({
       currentUser,
