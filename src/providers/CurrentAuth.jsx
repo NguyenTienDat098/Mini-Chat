@@ -1,5 +1,11 @@
+import { serverTimestamp } from "firebase/firestore";
+import moment from "moment/moment";
 import { useEffect, createContext, useState, useMemo, useContext } from "react";
-import { listenDocument } from "../firebase/util";
+import {
+  getMutipleDocuments,
+  listenDocument,
+  updateField,
+} from "../firebase/util";
 import { UserContext } from "./Users";
 
 export const CurrentAuthContext = createContext();
@@ -22,6 +28,41 @@ function CurrentAuth({ children }) {
       });
     }
   }, [user]);
+
+  const updateStatus = (currentUser, online) => {
+    if (!online) {
+      getMutipleDocuments("Users", "username", ">=", "").then((res) => {
+        res.forEach((user) => {
+          let dataUpdate = user.chats;
+          dataUpdate.forEach((e) => {
+            if (e.id === currentUser.id) {
+              e.online = online;
+              e.endTime = moment().format();
+            }
+          });
+          updateField("Users", user.id, "chats", dataUpdate);
+        });
+      });
+    } else {
+      getMutipleDocuments("Users", "username", ">=", "").then((res) => {
+        res.forEach((user) => {
+          let dataUpdate = user.chats;
+          dataUpdate.forEach((e) => {
+            if (e.id === currentUser.id) {
+              e.online = online;
+            }
+          });
+          updateField("Users", user.id, "chats", dataUpdate);
+        });
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser !== null) {
+      updateStatus(currentUser, currentUser.online);
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser !== null && currentUser.currentChat !== "") {

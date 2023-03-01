@@ -40,7 +40,7 @@ function Home() {
             <img
               src={logo}
               alt="logo"
-              className="w-[50%] h-auto max-w-[300px]"
+              className="w-[50%] h-auto max-w-[150px]"
             />
             <LoadingPage color={"rgba(254, 44, 85, 1)"} type={"bubbles"} />
           </div>

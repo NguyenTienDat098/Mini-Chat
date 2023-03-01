@@ -19,8 +19,8 @@ import {
 import { auth } from "../firebase/config";
 import { addDocument, getSimpleDocument, updateField } from "../firebase/util";
 import defaultAvatar from "../assets/imgs/default-avatar.png";
-import { serverTimestamp } from "firebase/firestore";
 import { NotificationsContext } from "./Notifications";
+import moment from "moment";
 
 export const UserContext = createContext();
 
@@ -45,10 +45,10 @@ function Users({ children }) {
       if (user !== null) {
         if (online) {
           updateField("Users", user.id, "online", true);
-          updateField("Users", user.id, "startTime", serverTimestamp());
+          updateField("Users", user.id, "startTime", moment().format());
         } else {
           updateField("Users", user.id, "online", false);
-          updateField("Users", user.id, "endTime", serverTimestamp());
+          updateField("Users", user.id, "endTime", moment().format());
         }
       }
     };
@@ -96,13 +96,13 @@ function Users({ children }) {
         setOnline(true);
         if (user !== null) {
           updateField("Users", user.id, "online", true);
-          updateField("Users", user.id, "startTime", serverTimestamp());
+          updateField("Users", user.id, "startTime", moment().format());
         }
       } else {
         setOnline(false);
         if (user !== null) {
           updateField("Users", user.id, "online", false);
-          updateField("Users", user.id, "endTime", serverTimestamp());
+          updateField("Users", user.id, "endTime", moment().format());
         }
       }
     };
@@ -131,7 +131,7 @@ function Users({ children }) {
             online: true,
             currentChat: "",
             chats: [],
-            startTime: serverTimestamp(),
+            startTime: moment().format(),
             endTime: "",
             desc: "",
           };
@@ -142,7 +142,7 @@ function Users({ children }) {
           });
         } else {
           updateField("Users", user.uid, "online", true);
-          updateField("Users", user.uid, "startTime", serverTimestamp());
+          updateField("Users", user.uid, "startTime", moment().forMmat());
           getSimpleDocument("Users", user.uid)
             .then((user) => {
               const data = {
@@ -154,7 +154,7 @@ function Users({ children }) {
                 online: user.online,
                 currentChat: user.currentChat,
                 chats: user.chats,
-                startTime: serverTimestamp(),
+                startTime: moment().format(),
                 endTime: user.endTime,
                 desc: user.desc,
               };
@@ -207,7 +207,7 @@ function Users({ children }) {
               online: true,
               currentChat: "",
               chats: [],
-              startTime: serverTimestamp(),
+              startTime: moment().format(),
               endTime: "",
               desc: "",
             };
@@ -246,7 +246,7 @@ function Users({ children }) {
           getSimpleDocument("Users", user.uid)
             .then((res) => {
               setUser(res);
-              updateField("Users", res.id, "startTime", serverTimestamp());
+              updateField("Users", res.id, "startTime", moment().forMmat());
             })
             .catch((error) => {
               console.log(error);
@@ -339,7 +339,7 @@ function Users({ children }) {
             online: true,
             currentChat: "",
             chats: [],
-            startTime: serverTimestamp(),
+            startTime: moment().format(),
             endTime: "",
             desc: "",
           };
@@ -350,7 +350,7 @@ function Users({ children }) {
           });
         } else {
           updateField("Users", user.uid, "online", true);
-          updateField("Users", user.uid, "startTime", serverTimestamp());
+          updateField("Users", user.uid, "startTime", moment().forMmat());
           getSimpleDocument("Users", user.uid)
             .then((user) => {
               const data = {
@@ -362,7 +362,7 @@ function Users({ children }) {
                 online: user.online,
                 currentChat: user.currentChat,
                 chats: user.chats,
-                startTime: serverTimestamp(),
+                startTime: moment().format(),
                 endTime: user.endTime,
                 desc: user.desc,
               };
@@ -398,7 +398,7 @@ function Users({ children }) {
       .then(() => {
         setUser(null);
         updateField("Users", user.id, "online", false);
-        updateField("Users", user.id, "endTime", serverTimestamp());
+        updateField("Users", user.id, "endTime", moment().format());
         updateField("Users", user.id, "currentChat", "");
       })
       .catch((error) => {

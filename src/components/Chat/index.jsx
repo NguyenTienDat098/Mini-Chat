@@ -334,7 +334,7 @@ function Chat({ className = "" }) {
                 setMessage(e.target.value);
               }}
               type="text"
-              className="input-type-message w-[50%] p-2 rounded-[500px] pl-4 bg-[rgba(0,0,0,0.2)]"
+              className="input-type-message w-[50%] p-2 rounded-[500px] pl-4 bg-[rgba(0,0,0,0.2)] text-[var(--text-color)]"
               id="inputID"
               placeholder="Nhập vào tin nhắn..."
             />

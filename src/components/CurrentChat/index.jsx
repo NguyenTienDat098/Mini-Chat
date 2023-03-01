@@ -4,9 +4,9 @@ import { useContext } from "react";
 import { ChatSettingContext } from "../../providers/ChatSetting";
 import { ShowChatContext } from "../../providers/ShowChat";
 import LoadingSkeleton from "../Loading/LoadingSkeleton";
-import { formatDistance } from "date-fns";
 import defautlAvatar from "../../assets/imgs/default-avatar.png";
 import { CurrentAuthContext } from "../../providers/CurrentAuth";
+import moment from "moment-timezone";
 
 function CurrentChat() {
   const ChatSettingData = useContext(ChatSettingContext);
@@ -16,26 +16,22 @@ function CurrentChat() {
   const CurrentAuthData = useContext(CurrentAuthContext);
   const { currentUserChat, nickName } = CurrentAuthData;
 
-  const getTimeOffline = (endtime) => {
-    const now = new Date();
-    if (endtime !== "") {
-      const end = endtime.toDate();
-      const timeInEnglish = formatDistance(now, end, { addSuffix: true });
-      const timeInVietnamese = timeInEnglish
-        .replace(/(in)/, "Hoạt động")
-        .replace(/(ago)/, "trước")
-        .replace(/(minutes)/, "phút trước")
-        .replace(/(minute)/, "phút")
-        .replace(/(less)/, "vài")
-        .replace(/(than)/, "trước")
-        .replace(/(a)/, "")
-        .replace(/(about)/, "khoảng")
-        .replace(/(bout)/, "khoảng")
-        .replace(/(hour)/, "giờ")
-        .replace(/(hours)/, "giờ trước")
-        .replace(/(dy)/, "ngày")
-        .replace(/(s)/, "");
-      return timeInVietnamese;
+  const getTimeOffline = (endTime) => {
+    if (endTime !== "") {
+      const duration = moment.duration(
+        moment.tz(moment(), "Asia/Ho_Chi_Minh").diff(moment.tz(endTime, "UTC"))
+      );
+      const hours = duration.hours();
+      const minutes = duration.minutes();
+      const seconds = duration.seconds();
+      console.log(hours, minutes, seconds);
+      if (seconds < 60 && minutes === 0 && hours === 0) {
+        return "Hoạt động vài giây trước";
+      } else if (minutes > 0 && hours === 0) {
+        return `Hoạt động ${minutes} phút trước`;
+      } else if (hours > 0) {
+        return `Hoạt động ${hours} giờ trước`;
+      }
     }
   };
 
@@ -69,7 +65,9 @@ function CurrentChat() {
             </span>
           ) : (
             <span className="ml-4 text-[13px] font-[500] text-gray-400">
-              offline
+              {currentUserChat.endTime !== ""
+                ? getTimeOffline(currentUserChat.endTime)
+                : "offline"}
             </span>
           )}
         </div>

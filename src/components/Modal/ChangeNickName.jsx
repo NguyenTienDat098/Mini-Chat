@@ -13,7 +13,7 @@ function ChangeNickName({ show, className }) {
   const overlayRef = useRef();
   const CurrentAuthData = useContext(CurrentAuthContext);
   const { currentUser, currentUserChat } = CurrentAuthData;
-  const [nickName, setNickName] = useState(null);
+  const [nickName, setNickName] = useState("");
 
   const changeNickName = () => {
     if (currentUser !== null) {

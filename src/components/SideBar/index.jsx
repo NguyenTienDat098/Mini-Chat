@@ -75,7 +75,6 @@ function SideBar({ className = "" }) {
           exists = true;
         }
       });
-      console.log(exists);
       if (!exists) {
         updateArrayField("Users", currentUser.id, "chats", {
           id: users.id,
@@ -84,6 +83,7 @@ function SideBar({ className = "" }) {
           nickName: "",
           online: users.online,
           desc: users.desc,
+          endTime: users.endTime,
         });
         updateArrayField("Users", users.id, "chats", {
           id: currentUser.id,
@@ -92,6 +92,7 @@ function SideBar({ className = "" }) {
           nickName: "",
           online: currentUser.online,
           desc: currentUser.desc,
+          endTime: currentUser.endTime,
         });
         updateField("Users", currentUser.id, "currentChat", users.id);
         setShowChat(true);
@@ -107,6 +108,7 @@ function SideBar({ className = "" }) {
         nickName: "",
         online: users.online,
         desc: users.desc,
+        endTime: users.endTime,
       });
       updateArrayField("Users", users.id, "chats", {
         id: currentUser.id,
@@ -114,7 +116,8 @@ function SideBar({ className = "" }) {
         photo: currentUser.photo,
         nickName: "",
         online: currentUser.online,
-        desc: users.desc,
+        desc: currentUser.desc,
+        endTime: currentUser.endTime,
       });
       updateField("Users", currentUser.id, "currentChat", users.id);
       setShowChat(true);

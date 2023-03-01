@@ -150,7 +150,12 @@ function Message(props) {
                   {message}
                 </span>
                 {gif && gif !== "" ? (
-                  <img src={gif} alt="gif" key={uuid()} className="w-[100px]" />
+                  <img
+                    src={gif}
+                    alt="gif"
+                    key={uuid()}
+                    className="w-[100px] rounded-lg"
+                  />
                 ) : (
                   false
                 )}
@@ -221,7 +226,12 @@ function Message(props) {
                 {message}
               </span>
               {gif && gif !== "" ? (
-                <img src={gif} alt="gif" key={uuid()} className="w-[100px]" />
+                <img
+                  src={gif}
+                  alt="gif"
+                  key={uuid()}
+                  className="w-[100px] rounded-lg"
+                />
               ) : (
                 false
               )}

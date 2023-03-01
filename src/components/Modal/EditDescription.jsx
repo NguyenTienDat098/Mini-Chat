@@ -1,11 +1,7 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  getMutipleDocuments,
-  listenDocument,
-  updateField,
-} from "../../firebase/util";
+import { getMutipleDocuments, updateField } from "../../firebase/util";
 import { CurrentAuthContext } from "../../providers/CurrentAuth";
 import { ModalContext } from "../../providers/Modal";
 import "./modal.css";
@@ -34,7 +30,6 @@ function EditDiscription({ show, className }) {
           dataUpdate.chats.forEach((item) => {
             if (item.id === currentUser.id && user.id !== currentUser.id) {
               item.desc = description;
-              console.log(dataUpdate);
               updateField("Users", user.id, "chats", dataUpdate.chats);
             }
           });
@@ -100,7 +95,7 @@ function EditDiscription({ show, className }) {
               isFocused ? "focus" : ""
             }`}
           >
-            <div className="pt-[12px] pl-[8px] pr-[8px]  flex items-center justify-between text-[12px]">
+            <div className="pt-[12px] pl-[8px] pr-[8px] flex items-center justify-between text-[12px] text-[var(--text-color)]">
               <span className={`nick-name-title ${isFocused ? "focus" : ""}`}>
                 Mô tả
               </span>
